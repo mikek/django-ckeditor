@@ -14,6 +14,7 @@ setup(
     ],
     install_requires = [
         'Pillow',
+        'lxml',
     ],
     include_package_data=True,
     test_suite="setuptest.SetupTestSuite",
