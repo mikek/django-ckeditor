@@ -1,11 +1,14 @@
 from django.db import models
 from django import forms
+import django.utils.safestring
 
 import ckeditor.signals as signals
 from ckeditor.widgets import CKEditorWidget
 
 
 class RichTextField(models.TextField):
+    __metaclass__ = models.SubfieldBase
+
     def __init__(self, *args, **kwargs):
         self.config_name = kwargs.pop("config_name", "default")
         self.dynamic_resize = kwargs.pop("dynamic_resize",False)
@@ -18,6 +21,10 @@ class RichTextField(models.TextField):
         }
         defaults.update(kwargs)
         return super(RichTextField, self).formfield(**defaults)
+
+    def to_python(self, value):
+        value = super(RichTextField, self).to_python(value)
+        return django.utils.safestring.mark_safe(value)
 
     def contribute_to_class(self, cls, name):
         super(RichTextField, self).contribute_to_class(cls, name)
